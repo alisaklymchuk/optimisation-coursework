@@ -8,6 +8,9 @@ import plotly.graph_objects as go
 def phi(x, n):
     return np.array([x ** i for i in range(n)])
 
+def delta_phi(x, n):
+    return np.array([0] + [(i + 1) * x ** i for i in range(n - 1)])
+
 def get_plot(x, y, title, xaxis, yaxis):
     fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
     fig.update_layout(
@@ -22,10 +25,14 @@ def get_plot(x, y, title, xaxis, yaxis):
     )
     fig.show()
 
-train_df = pd.read_csv("data/trainingIa.dat", sep=r"\s+", header=None)
-train_df.columns = ["x", "y"]
-x = train_df["x"]
-y = train_df["y"]
+train_df = pd.read_csv("data/trainingIb.dat", sep=r"\s+", header=None)
+train_df.columns = ["x", "y", "dy"]
+x = np.array(train_df["x"])
+y = np.array(train_df["y"])
+dy = np.array(train_df["dy"])
+# create a vector of values that we want to get (vector b)
+y = np.concatenate((y, dy), axis=0)
+print(y)
 validation_df = pd.read_csv("data/validationIa.dat", sep=r"\s+", header=None)
 validation_df.columns = ["x", "y"]
 validation_x = validation_df["x"]
@@ -36,13 +43,16 @@ N = 20
 MSE = [0] * N
 log_MSE = [0] * N
 for n in range(1, N + 1):
-    X = np.array([phi(xi, n) for xi in x])
+    A0 = np.array([phi(xi, n) for xi in x])
+    A1 = np.array([delta_phi(xi, n) for xi in x])
+    X = np.concatenate((A0, A1), axis=0)
     model = LinearRegression(fit_intercept=False)
     model.fit(X, y)
     theta = np.array(model.coef_)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
     MSE[n - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
+
 
 # MSE vs degree plot
 get_plot([n for n in range(1, N + 1)], MSE, "Mean Squared Error vs Degree", "Degree",
@@ -58,9 +68,13 @@ n = 10
 MSE = [0] * len(x)
 log_MSE = [0] * len(x)
 for training_data_size in range(1, len(x) + 1):
-    X = np.array([phi(x[i], n) for i in range(training_data_size)])
+    A0 = np.array([phi(x[i], n) for i in range(training_data_size)])
+    A1 = np.array([delta_phi(x[i], n) for i in range(training_data_size)])
+    X = np.concatenate((A0, A1), axis=0)
     model = LinearRegression(fit_intercept=False)
-    model.fit(X, y[:training_data_size])
+    print(y[:training_data_size])
+    print(dy[:training_data_size])
+    model.fit(X, np.concatenate((y[:training_data_size], dy[:training_data_size]), axis = 0))
     theta = np.array(model.coef_)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
     MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
