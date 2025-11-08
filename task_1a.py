@@ -22,6 +22,11 @@ def get_plot(x, y, title, xaxis, yaxis):
     )
     fig.show()
 
+def get_theta(X, Y):
+    model = LinearRegression(fit_intercept=False)
+    model.fit(X, Y)
+    return np.array(model.coef_)
+
 train_df = pd.read_csv("data/trainingIa.dat", sep=r"\s+", header=None)
 train_df.columns = ["x", "y"]
 x = train_df["x"]
@@ -37,9 +42,8 @@ MSE = [0] * N
 log_MSE = [0] * N
 for n in range(1, N + 1):
     X = np.array([phi(xi, n) for xi in x])
-    model = LinearRegression(fit_intercept=False)
-    model.fit(X, y)
-    theta = np.array(model.coef_)
+    Y = y
+    theta = get_theta(X, Y)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
     MSE[n - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
@@ -59,17 +63,11 @@ MSE = [0] * len(x)
 log_MSE = [0] * len(x)
 for training_data_size in range(1, len(x) + 1):
     X = np.array([phi(x[i], n) for i in range(training_data_size)])
-    model = LinearRegression(fit_intercept=False)
-    model.fit(X, y[:training_data_size])
-    theta = np.array(model.coef_)
+    Y = y[:training_data_size]
+    theta = get_theta(X, Y)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
     MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(MSE[training_data_size - 1]) / np.log(10)
 
 get_plot([n for n in range(1, len(x) + 1)], log_MSE, "Log(Mean Squared Error) vs Number of training points",
          "Number of training points", "Log(Mean Squared Error)")
-
-
-
-
-

@@ -25,14 +25,16 @@ def get_plot(x, y, title, xaxis, yaxis):
     )
     fig.show()
 
+def get_theta(X, Y):
+    model = LinearRegression(fit_intercept=False)
+    model.fit(X, Y)
+    return np.array(model.coef_)
+
 train_df = pd.read_csv("data/trainingIb.dat", sep=r"\s+", header=None)
 train_df.columns = ["x", "y", "dy"]
 x = np.array(train_df["x"])
 y = np.array(train_df["y"])
 dy = np.array(train_df["dy"])
-# create a vector of values that we want to get (vector b)
-y = np.concatenate((y, dy), axis=0)
-print(y)
 validation_df = pd.read_csv("data/validationIa.dat", sep=r"\s+", header=None)
 validation_df.columns = ["x", "y"]
 validation_x = validation_df["x"]
@@ -42,17 +44,16 @@ m = len(validation_x)
 N = 20
 MSE = [0] * N
 log_MSE = [0] * N
+# create a vector of values that we want to get (vector b)
+Y = np.concatenate((y, dy), axis=0)
 for n in range(1, N + 1):
     A0 = np.array([phi(xi, n) for xi in x])
     A1 = np.array([delta_phi(xi, n) for xi in x])
     X = np.concatenate((A0, A1), axis=0)
-    model = LinearRegression(fit_intercept=False)
-    model.fit(X, y)
-    theta = np.array(model.coef_)
+    theta = get_theta(X, Y)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
     MSE[n - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
-
 
 # MSE vs degree plot
 get_plot([n for n in range(1, N + 1)], MSE, "Mean Squared Error vs Degree", "Degree",
@@ -65,25 +66,16 @@ get_plot([n for n in range(1, N + 1)], log_MSE, "Log(Mean Squared Error) vs Degr
 
 # n = 10 is when MSE <= 10^-3
 n = 10
-MSE = [0] * len(x)
 log_MSE = [0] * len(x)
 for training_data_size in range(1, len(x) + 1):
     A0 = np.array([phi(x[i], n) for i in range(training_data_size)])
     A1 = np.array([delta_phi(x[i], n) for i in range(training_data_size)])
     X = np.concatenate((A0, A1), axis=0)
-    model = LinearRegression(fit_intercept=False)
-    print(y[:training_data_size])
-    print(dy[:training_data_size])
-    model.fit(X, np.concatenate((y[:training_data_size], dy[:training_data_size]), axis = 0))
-    theta = np.array(model.coef_)
+    Y = np.concatenate((y[:training_data_size], dy[:training_data_size]), axis = 0)
+    theta = get_theta(X, Y)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
-    MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
-    log_MSE[training_data_size - 1] = np.log(MSE[training_data_size - 1]) / np.log(10)
+    mse = np.linalg.norm(predictions - validation_y) ** 2 / m
+    log_MSE[training_data_size - 1] = np.log(mse) / np.log(10)
 
 get_plot([n for n in range(1, len(x) + 1)], log_MSE, "Log(Mean Squared Error) vs Number of training points",
          "Number of training points", "Log(Mean Squared Error)")
-
-
-
-
-
