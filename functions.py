@@ -11,6 +11,12 @@ def phi(x, n):
 def grad_phi(x, n):
     return np.array([0] + [(i + 1) * x ** i for i in range(n - 1)])
 
+def J_1(x, y):
+    return np.linalg.norm(x) ** 2 + np.linalg.norm(y) ** 2
+
+def J_2(u, v):
+    return np.linalg.norm(u - v) ** 2
+
 def get_plot(x, y, title, xaxis, yaxis):
     fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
     fig.update_layout(
