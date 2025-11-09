@@ -4,28 +4,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-
-def phi(x, n):
-    return np.array([x ** i for i in range(n)])
-
-def get_plot(x, y, title, xaxis, yaxis):
-    fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
-    fig.update_layout(
-        title={
-            'text':title,
-            'x': 0.5,  # centers the title
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        xaxis_title=xaxis,
-        yaxis_title=yaxis
-    )
-    fig.show()
-
-def get_theta(X, Y):
-    model = LinearRegression(fit_intercept=False)
-    model.fit(X, Y)
-    return np.array(model.coef_)
+from functions import *
 
 train_df = pd.read_csv("data/trainingIa.dat", sep=r"\s+", header=None)
 train_df.columns = ["x", "y"]

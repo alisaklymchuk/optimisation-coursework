@@ -4,31 +4,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-
-def phi(x, n):
-    return np.array([x ** i for i in range(n)])
-
-def delta_phi(x, n):
-    return np.array([0] + [(i + 1) * x ** i for i in range(n - 1)])
-
-def get_plot(x, y, title, xaxis, yaxis):
-    fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
-    fig.update_layout(
-        title={
-            'text':title,
-            'x': 0.5,  # centers the title
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        xaxis_title=xaxis,
-        yaxis_title=yaxis
-    )
-    fig.show()
-
-def get_theta(X, Y):
-    model = LinearRegression(fit_intercept=False)
-    model.fit(X, Y)
-    return np.array(model.coef_)
+from functions import *
 
 train_df = pd.read_csv("data/trainingIb.dat", sep=r"\s+", header=None)
 train_df.columns = ["x", "y", "dy"]
@@ -48,7 +24,7 @@ log_MSE = [0] * N
 Y = np.concatenate((y, dy), axis=0)
 for n in range(1, N + 1):
     A0 = np.array([phi(xi, n) for xi in x])
-    A1 = np.array([delta_phi(xi, n) for xi in x])
+    A1 = np.array([grad_phi(xi, n) for xi in x])
     X = np.concatenate((A0, A1), axis=0)
     theta = get_theta(X, Y)
     predictions = np.array([theta.T @ phi(validation_x[i], n) for i in range(m)])
@@ -69,7 +45,7 @@ n = 10
 log_MSE = [0] * len(x)
 for training_data_size in range(1, len(x) + 1):
     A0 = np.array([phi(x[i], n) for i in range(training_data_size)])
-    A1 = np.array([delta_phi(x[i], n) for i in range(training_data_size)])
+    A1 = np.array([grad_phi(x[i], n) for i in range(training_data_size)])
     X = np.concatenate((A0, A1), axis=0)
     Y = np.concatenate((y[:training_data_size], dy[:training_data_size]), axis = 0)
     theta = get_theta(X, Y)
