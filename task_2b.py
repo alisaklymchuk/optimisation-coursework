@@ -28,7 +28,7 @@ for i in range(N):
 
 gamma = 1
 M = (A.T @ A + B.T @ B + gamma * D.T @ D)
-optimal_uv = -(np.linalg.inv(M)) @ (c_.T @ A + d_.T @ A).T
+optimal_uv = -(np.linalg.inv(M)) @ (c_.T @ A + d_.T @ B).T
 x = A @ optimal_uv + c_
 y = B @ optimal_uv + d_
 x = x[:N + 1]

@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from functions import get_plot, J_1, J_2
 
-N = 50
+N = 5
 a = 1
 b = 0.05
 x0 = 1
@@ -25,7 +25,6 @@ for i in range(N):
         if i >= j:
             A[i + 1][j] = a ** (i - j) * b
             B[N + 1 + i + 1, N + j] = c ** (i - j) * d
-
 J1 = []
 J2 = []
 gammas = []
@@ -34,7 +33,7 @@ for power in np.arange(-5.0, 5.1, 0.1):
     gamma = 10 ** power
     gammas.append(power)
     M = (A.T @ A + B.T @ B + gamma * D.T @ D)
-    optimal_uv = -(np.linalg.inv(M)) @ (c_.T @ A + d_.T @ A).T
+    optimal_uv = -(np.linalg.inv(M)) @ (c_.T @ A + d_.T @ B).T
     x = A @ optimal_uv + c_
     y = B @ optimal_uv + d_
     x = x[:N + 1]
