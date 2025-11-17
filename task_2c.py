@@ -43,17 +43,13 @@ for power in np.arange(-5.0, 5.1, 0.1):
     J1.append(J_1(x, y))
     J2.append(J_2(u, v))
 
-get_plot(J1, J2, "Pareto Front of J₁(γ) vs J₂(γ)", "J₁(γ)", "J₂(γ)")
+get_plot(J1, J2, "2c - Pareto Front of J₁(γ) vs J₂(γ)", "J₁(γ)", "J₂(γ)")
 
-print(gammas)
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=gammas, y=J1, name="J₁(log(γ))"))
 fig.add_trace(go.Scatter(x=gammas, y=J2, name="J₂(log(γ))"))
 fig.update_layout(
-    title="Cost functions J₁(γ) and J₂(γ)",
     xaxis_title="log(γ)",
     yaxis_title="J(γ)"
 )
-fig.show()
-
-
+fig.write_image("images/2c - Cost functions J₁(γ) and J₂(γ).png")

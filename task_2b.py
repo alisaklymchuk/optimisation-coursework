@@ -36,8 +36,7 @@ y = y[N + 1:]
 u = optimal_uv[:N]
 v = optimal_uv[N:]
 
-print(gamma * np.linalg.norm(optimal_uv) ** 2 + np.linalg.norm(x) ** 2)
-get_plot([i for i in range(N + 1)], x, "Optimal Trajectories x_u*","Time step i", "x",)
-get_plot([i for i in range(1, N + 1)], u, "Optimal Control Signals u*","Time step i", "u*")
-get_plot([i for i in range(N + 1)], y, "Optimal Trajectories y_v*","Time step i", "y")
-get_plot([i for i in range(1, N + 1)], v, "Optimal Control Signals v*", "Time step i", "v*")
+get_plot([i for i in range(N + 1)], x, "2b - Optimal Trajectories x_u*","Time step i", "x",)
+get_plot([i for i in range(1, N + 1)], u, "2b - Optimal Control Signals u*","Time step i", "u*")
+get_plot([i for i in range(N + 1)], y, "2b - Optimal Trajectories y_v*","Time step i", "y")
+get_plot([i for i in range(1, N + 1)], v, "2b - Optimal Control Signals v*", "Time step i", "v*")
