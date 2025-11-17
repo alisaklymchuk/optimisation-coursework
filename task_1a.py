@@ -28,11 +28,12 @@ for n in range(1, N + 1):
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
 
 # MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], MSE, "Degree",
+get_plot([n for n in range(1, N + 1)], MSE, "1a - MSE vs Degree", "Degree",
          "Mean Squared Error")
 
+
 # log MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], log_MSE,
+get_plot([n for n in range(1, N + 1)], log_MSE, "1a - Log MSE vs Degree",
          "Degree", "Log(Mean Squared Error)")
 "Mean Squared Error vs Degree"
 
@@ -48,12 +49,9 @@ for training_data_size in range(1, len(x) + 1):
     MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(MSE[training_data_size - 1]) / np.log(10)
 
-get_plot([n for n in range(1, len(x) + 1)], log_MSE,
+get_plot([n for n in range(1, len(x) + 1)], log_MSE, "1a - Log MSE vs Number of training points",
          "Number of training points", "Log(Mean Squared Error)")
 
 x = np.linspace(-2, 2, 1000)
 y = np.array([theta.T @ phi(x[i], n) for i in range(1000)])
-fig = px.line(x, y)
-fig.show()
-fig = get_plot(x, y, "x", "f(x)")
-fig.write_image("plots/func1a.png")
+get_plot(x, y, "1a - Learned function f(x)", "x", "f(x)")

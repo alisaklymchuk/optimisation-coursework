@@ -32,11 +32,11 @@ for n in range(1, N + 1):
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
 
 # MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], MSE, "Mean Squared Error vs Degree", "Degree",
+get_plot([n for n in range(1, N + 1)], MSE, "1b - Mean Squared Error vs Degree", "Degree",
          "Mean Squared Error")
 
 # log MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], log_MSE, "Log(Mean Squared Error) vs Degree",
+get_plot([n for n in range(1, N + 1)], log_MSE, "1b - Log(Mean Squared Error) vs Degree",
          "Degree", "Log(Mean Squared Error)")
 "Mean Squared Error vs Degree"
 
@@ -53,5 +53,5 @@ for training_data_size in range(1, len(x) + 1):
     mse = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(mse) / np.log(10)
 
-get_plot([n for n in range(1, len(x) + 1)], log_MSE, "Log(Mean Squared Error) vs Number of training points",
+get_plot([n for n in range(1, len(x) + 1)], log_MSE, "1b - Log(Mean Squared Error) vs Number of training points",
          "Number of training points", "Log(Mean Squared Error)")
