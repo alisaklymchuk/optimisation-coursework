@@ -2,9 +2,9 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
-from functions import *
+import plotly.express as px
+from functions import phi, get_theta, get_plot
 
 train_df = pd.read_csv("data/trainingIa.dat", sep=r"\s+", header=None)
 train_df.columns = ["x", "y"]
@@ -28,11 +28,11 @@ for n in range(1, N + 1):
     log_MSE[n - 1] = np.log(MSE[n - 1]) / np.log(10)
 
 # MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], MSE, "Mean Squared Error vs Degree", "Degree",
+get_plot([n for n in range(1, N + 1)], MSE, "Degree",
          "Mean Squared Error")
 
 # log MSE vs degree plot
-get_plot([n for n in range(1, N + 1)], log_MSE, "Log(Mean Squared Error) vs Degree",
+get_plot([n for n in range(1, N + 1)], log_MSE,
          "Degree", "Log(Mean Squared Error)")
 "Mean Squared Error vs Degree"
 
@@ -48,5 +48,12 @@ for training_data_size in range(1, len(x) + 1):
     MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(MSE[training_data_size - 1]) / np.log(10)
 
-get_plot([n for n in range(1, len(x) + 1)], log_MSE, "Log(Mean Squared Error) vs Number of training points",
+get_plot([n for n in range(1, len(x) + 1)], log_MSE,
          "Number of training points", "Log(Mean Squared Error)")
+
+x = np.linspace(-2, 2, 1000)
+y = np.array([theta.T @ phi(x[i], n) for i in range(1000)])
+fig = px.line(x, y)
+fig.show()
+fig = get_plot(x, y, "x", "f(x)")
+fig.write_image("plots/func1a.png")

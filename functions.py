@@ -32,19 +32,14 @@ def norm1(u, e):
 def f(x, y, u, v, gamma1, gamma2, e):
     return norm(x) ** 2 + norm(y) ** 2 + gamma2 * norm(u - v) ** 2 + gamma1 * norm1(u - v)
 
-def get_plot(x, y, title, xaxis, yaxis):
+def get_plot(x, y, xaxis, yaxis):
     fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers'))
     fig.update_layout(
-        title={
-            'text':title,
-            'x': 0.5,  # centers the title
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
         xaxis_title=xaxis,
         yaxis_title=yaxis
     )
     fig.show()
+    return fig
 
 def get_theta(X, Y):
     model = LinearRegression(fit_intercept=False)
