@@ -23,7 +23,6 @@ for gamma in [0.001, 0.01, 0.1, 1]:
     M = (A.T @ A + gamma * np.eye(N))
     optimal_u = -(np.linalg.inv(M)) @ A.T @ c
     x = A @ optimal_u + c
-    print(gamma * np.linalg.norm(optimal_u) ** 2 + np.linalg.norm(x) ** 2)
     fig_u.add_trace(go.Scatter(y=optimal_u, mode='lines+markers', name=f'gamma={gamma}'))
     fig_x.add_trace(go.Scatter(y=x, mode='lines+markers', name=f'gamma={gamma}'))
 
@@ -32,11 +31,11 @@ fig_u.update_layout(
     xaxis_title="Time step i",
     yaxis_title="u*",
 )
-fig_u.show()
+fig_u.write_image("images/2a - Optimal Control Signals u.png")
 
 fig_x.update_layout(
     title="Optimal Trajectories x_u*",
     xaxis_title="Time step i",
     yaxis_title="x",
 )
-fig_x.show()
+fig_x.write_image("images/2a - Optimal Trajectories x_u.png")
