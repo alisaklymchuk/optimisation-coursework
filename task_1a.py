@@ -49,8 +49,8 @@ for training_data_size in range(1, len(x) + 1):
     MSE[training_data_size - 1] = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(MSE[training_data_size - 1]) / np.log(10)
 
-get_plot([n for n in range(1, len(x) + 1)], log_MSE, "1a - Log MSE vs Number of training points",
-         "Number of training points", "Log(Mean Squared Error)")
+get_plot([n for n in range(1, len(x) + 1)], MSE, "1a - MSE vs Number of training points",
+         "Number of training points", "Mean Squared Error")
 
 x = np.linspace(-2, 2, 1000)
 y = np.array([theta.T @ phi(x[i], n) for i in range(1000)])
