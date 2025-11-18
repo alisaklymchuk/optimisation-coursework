@@ -53,5 +53,19 @@ for training_data_size in range(1, len(x) + 1):
     mse = np.linalg.norm(predictions - validation_y) ** 2 / m
     log_MSE[training_data_size - 1] = np.log(mse) / np.log(10)
 
+
+
 get_plot([n for n in range(1, len(x) + 1)], log_MSE, "1b - Log(Mean Squared Error) vs Number of training points",
          "Number of training points", "Log(Mean Squared Error)")
+
+get_plot([n for n in range(1, len(x) + 1)], MSE, "1b - Mean Squared Error vs Number of training points",
+         "Number of training points", "Log(Mean Squared Error)")
+
+x = np.linspace(-2, 2, 1000)
+y = np.array([theta.T @ phi(x[i], n) for i in range(1000)])
+fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines'))
+fig.update_layout(
+    xaxis_title="x",
+    yaxis_title="V(x)"
+)
+fig.write_image("images/1b - Learned function V(x).png")
