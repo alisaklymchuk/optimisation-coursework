@@ -84,3 +84,18 @@ x_plot.write_image("images/2d - x_plot.png")
 y_plot.write_image("images/2d - y_plot.png")
 u_plot.write_image("images/2d - u_plot.png")
 v_plot.write_image("images/2d - v_plot.png")
+
+L_e_plot = go.Figure()
+t = np.linspace(-2, 2, 1000)
+e = 0.5
+L_e_plot.add_trace(go.Scatter(x=t, y=[L_e(i, e) for i in t], name = "L_e for epsilon = "f"{e}"))
+L_e_plot.add_trace(go.Scatter(x=t, y=[e * abs(i) - e ** 2 / 2 for i in t], name = "e|u| - e^2/2 for epsilon = "f"{e}", mode='lines',
+    line=dict(dash='dash')))
+e = 0.1
+L_e_plot.add_trace(go.Scatter(x=t, y=[L_e(i, e) for i in t], name = "Epsilon = "f"{e}"))
+L_e_plot.add_trace(go.Scatter(x=t, y=[e * abs(i) - e ** 2 / 2 for i in t], name = "e|u| - e^2/2 for epsilon = "f"{e}", mode='lines',
+    line=dict(dash='dash')))
+
+L_e_plot.write_image("images/2d - L_e_plot.png",)
+
+
