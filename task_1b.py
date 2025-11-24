@@ -17,7 +17,7 @@ validation_x = validation_df["x"]
 validation_y = validation_df["y"]
 m = len(validation_x)
 
-N = 20
+N = 40
 MSE = [0] * N
 log_MSE = [0] * N
 # create a vector of values that we want to get (vector b)

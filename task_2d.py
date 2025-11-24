@@ -38,21 +38,22 @@ x_plot = go.Figure()
 y_plot = go.Figure()
 u_plot = go.Figure()
 v_plot = go.Figure()
+uv_plot = go.Figure()
 for i in range(len(params)):
     e = params[i][0]
     gamma2 = params[i][1]
     gamma1 = params[i][2]
 
     M = (A.T @ A + B.T @ B + gamma2 * D.T @ D)
-    L = 2 * norm(M + gamma1 * D.T @ D, ord=2)
+    L = 2 * norm(M, ord=2) + gamma1 * N
     t = 1 / L
 
     w = np.zeros(2 * N)
     cnt = 0
 
-    while (norm(grad_f(M, b, w, D, e)) > tolerance):
+    while (norm(grad_f(M, b, w, D, e, gamma1)) > tolerance):
         cnt += 1
-        w = w - t * grad_f(M, b, w, D, e)
+        w = w - t * grad_f(M, b, w, D, e, gamma1)
 
     x = A @ w + c_
     y = B @ w + d_
@@ -64,6 +65,7 @@ for i in range(len(params)):
     y_plot.add_trace(go.Scatter(x=[i for i in range(N + 1)], y=y, name = "Part "f"{i + 1}"))
     u_plot.add_trace(go.Scatter(x=[i + 1 for i in range(N)], y=u, name = "Part "f"{i + 1}"))
     v_plot.add_trace(go.Scatter(x=[i + 1 for i in range(N)], y=v, name = "Part "f"{i + 1}"))
+    uv_plot.add_trace(go.Scatter(x=[i + 1 for i in range(N)], y=abs(u - v), name = "Part "f"{i + 1}"))
 x_plot.update_layout(
     xaxis_title="Time step i",
     yaxis_title="x_i"
@@ -80,10 +82,15 @@ v_plot.update_layout(
     xaxis_title="Time step i",
     yaxis_title="v_i"
 )
+uv_plot.update_layout(
+    xaxis_title="Time step i",
+    yaxis_title="|u_i - v_i|"
+)
 x_plot.write_image("images/2d - x_plot.png")
 y_plot.write_image("images/2d - y_plot.png")
 u_plot.write_image("images/2d - u_plot.png")
 v_plot.write_image("images/2d - v_plot.png")
+uv_plot.write_image("images/2d - u_v_diff_plot.png")
 
 L_e_plot = go.Figure()
 t = np.linspace(-2, 2, 1000)
